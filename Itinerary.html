@@ -714,9 +714,19 @@ Connected with My Trips Screen
   <!-- JAVASCRIPT -->
 
   <script src="backend/traveloop.js"></script>
-  <script>
+<script>
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','<')
+        .replaceAll('>','>')
+        .replaceAll('"','"')
+        .replaceAll("'",'&#039;');
+    }
 
-    async function saveItinerary(){
+    // (removed duplicate placeholder saveItinerary)
+
+    /* async function saveItinerary(){
       const cityCards = document.querySelectorAll('.city-card');
       const stops = Array.from(cityCards).map(card => {
         const cityTitle = card.querySelector('.city-header h2')?.textContent.trim() || '';
@@ -754,12 +764,139 @@ Connected with My Trips Screen
     }
 
     function addStop(){
+      // TODO: UI for adding stop (frontend dynamic wiring)
       showNotification('Add Stop Feature Clicked!');
     }
 
     function addActivity(){
+      // TODO: UI for adding activity (frontend dynamic wiring)
       showNotification('Add Activity Feature Clicked!');
     }
+
+    // --- Dynamic Builder (frontend-only) ---
+    const CURRENT_TRIP_ID = (() => {
+      const sp = new URLSearchParams(window.location.search);
+      const tripId = sp.get('trip_id');
+      return tripId ? parseInt(tripId, 10) : null;
+    })();
+
+    async function saveItinerary(){
+      if (!CURRENT_TRIP_ID) {
+        showNotification('Missing trip_id in URL (e.g., Itinerary.html?trip_id=1)', false);
+        return;
+      }
+
+      const cityCards = document.querySelectorAll('.city-card');
+      const stops = Array.from(cityCards).map(card => {
+        const cityTitle = card.querySelector('.city-header h2')?.textContent.trim() || '';
+        const dates = card.querySelectorAll('.date-row input[type="date"]');
+        const arrival_date = dates[0]?.value || null;
+        const departure_date = dates[1]?.value || null;
+        const activities = Array.from(card.querySelectorAll('.activity-card')).map(activity => {
+          return {
+            title: activity.querySelector('h4')?.textContent.trim() || '',
+            description: activity.querySelector('p')?.textContent.trim() || '',
+            duration: activity.querySelector('.activity-info span')?.textContent.trim() || null,
+            cost: parseFloat(activity.querySelector('.activity-cost')?.textContent.replace(/[^0-9.]/g, '') || 0) || 0
+          };
+        });
+
+        return { city: cityTitle, arrival_date, departure_date, activities };
+      });
+
+      // Always save against trip_id (frontend dynamic requirement)
+      try {
+        await TravelLoopAPI.itinerary.save({
+          trip_id: CURRENT_TRIP_ID,
+          title: 'My Travel Itinerary',
+          summary: 'Saved itinerary from the planner.',
+          stops
+        });
+        showNotification('Itinerary saved successfully.');
+      } catch (error) {
+        showNotification(error.message, false);
+      }
+    }
+
+    async function initItineraryBuilder(){
+      const leftPanel = document.querySelector('.left-panel');
+      if (!CURRENT_TRIP_ID || !leftPanel) return;
+
+      // Frontend-only “empty builder” approach: remove mocked default cities
+      const mockedCards = Array.from(leftPanel.querySelectorAll('.city-card'));
+      if (mockedCards.length) {
+        mockedCards.forEach(el => el.remove());
+      }
+
+      // If user has no stops, we keep the UI structure empty + let them add via button.
+      // Minimal UX: insert one empty stop card by default.
+      leftPanel.insertAdjacentHTML('afterbegin', renderCityCard({ city: '', arrival_date: '', departure_date: '', activities: [] }));
+    }
+
+    function renderCityCard(stop){
+      const city = escapeHtml(stop?.city || '');
+      const arrival = stop?.arrival_date || '';
+      const departure = stop?.departure_date || '';
+      const activities = Array.isArray(stop?.activities) ? stop.activities : [];
+
+      const activitiesHtml = activities.length
+        ? activities.map(a => `
+          <div class="activity-card">
+            <h4>${escapeHtml(a.title || '')}</h4>
+            <p>${escapeHtml(a.description || '')}</p>
+            <div class="activity-info">
+              <span>${escapeHtml(a.duration || '')}</span>
+              <span class="activity-cost">$${Number(a.cost || 0)}</span>
+            </div>
+          </div>
+        `).join('')
+        : `
+          <div class="activity-card">
+            <h4></h4>
+            <p></p>
+            <div class="activity-info">
+              <span></span>
+              <span class="activity-cost">$0</span>
+            </div>
+          </div>
+        `;
+
+      return `
+        <div class="city-card">
+          <div class="city-header">
+            <h2>📍 ${city || 'New City'}</h2>
+            <button type="button" onclick="this.closest('.city-card')?.remove()">Remove</button>
+          </div>
+          <div class="date-row">
+            <div class="input-group">
+              <label>Arrival Date</label>
+              <input type="date" value="${arrival}">
+            </div>
+            <div class="input-group">
+              <label>Departure Date</label>
+              <input type="date" value="${departure}">
+            </div>
+          </div>
+          <div class="activity-section">
+            <div class="activity-title">
+              <h3>Activities</h3>
+              <button class="add-activity-btn" type="button" onclick="showNotification('Add Activity UI not implemented yet');">+ Add Activity</button>
+            </div>
+            ${activitiesHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', initItineraryBuilder);
+
+    // NOTE: saveItinerary/addStop/addActivity are defined above
+
+    
+
+    
+    // Removed stray code block introduced during previous edits.
+
 
   </script>
 

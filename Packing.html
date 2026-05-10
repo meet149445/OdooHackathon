@@ -1,9 +1,3 @@
-<!-- =========================================
-SCREEN 10 : PACKING CHECKLIST SCREEN
-Traveloop Hackathon Project
-Connected with Budget Planner
-========================================== -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -291,13 +285,14 @@ Connected with Budget Planner
     }
 
     .progress-fill{
-      width:70%;
+      width:0%;
       height:100%;
       background:linear-gradient(
         to right,
         #2563eb,
         #059669
       );
+      transition:width .2s ease;
     }
 
     .progress-text{
@@ -333,22 +328,22 @@ Connected with Budget Planner
       Traveloop
     </div>
 
-<ul class="menu">
-  <li><a href="Dashboard.html">🏠 Dashboard</a></li>
-  <li><a href="Create-Trip.html">✈ Create Trip</a></li>
-  <li><a href="My-Trip.html">🧳 My Trips</a></li>
-  <li><a href="Itinerary.html">📅 Build Itinerary</a></li>
-  <li><a href="Itinerary-View.html">🗺 Itinerary View</a></li>
-  <li><a href="Search.html">🌍 City Search</a></li>
-  <li><a href="Activity-Search.html">🎯 Activity Search</a></li>
-  <li><a href="Budget-Cost.html">💰 Budget Planner</a></li>
-  <li><a href="Packing.html">🎒 Packing Checklist</a></li>
-  <li><a href="Public-Itinerary-View.html">🌐 Community Trips</a></li>
-  <li><a href="Trip-Notes.html">📝 Trip Notes</a></li>
-  <li><a href="Profile.html">👤 Profile & Settings</a></li>
-  <li><a href="Admin-Dashboard.html">📊 Admin Analytics</a></li>
-  <li><a href="index.html">🚪 Logout</a></li>
-</ul>
+    <ul class="menu">
+      <li><a href="Dashboard.html">🏠 Dashboard</a></li>
+      <li><a href="Create-Trip.html">✈ Create Trip</a></li>
+      <li><a href="My-Trip.html">🧳 My Trips</a></li>
+      <li><a href="Itinerary.html">📅 Build Itinerary</a></li>
+      <li><a href="Itinerary-View.html">🗺 Itinerary View</a></li>
+      <li><a href="Search.html">🌍 City Search</a></li>
+      <li><a href="Activity-Search.html">🎯 Activity Search</a></li>
+      <li><a href="Budget-Cost.html">💰 Budget Planner</a></li>
+      <li><a href="Packing.html">🎒 Packing Checklist</a></li>
+      <li><a href="Public-Itinerary-View.html">🌐 Community Trips</a></li>
+      <li><a href="Trip-Notes.html">📝 Trip Notes</a></li>
+      <li><a href="Profile.html">👤 Profile & Settings</a></li>
+      <li><a href="Admin-Dashboard.html">📊 Admin Analytics</a></li>
+      <li><a href="index.html">🚪 Logout</a></li>
+    </ul>
 
   </div>
 
@@ -370,11 +365,8 @@ Connected with Budget Planner
 
       </div>
 
-      <button class="add-btn"
-        onclick="resetChecklist()">
-
+      <button class="add-btn" onclick="resetChecklist()">
         Reset Checklist
-
       </button>
 
     </div>
@@ -384,323 +376,26 @@ Connected with Budget Planner
     <div class="summary">
 
       <div class="summary-card">
-
         <h3>Total Items</h3>
-
-        <h2 class="blue">24</h2>
-
+        <h2 class="blue" id="packingTotalItems">—</h2>
       </div>
 
       <div class="summary-card">
-
         <h3>Packed</h3>
-
-        <h2 class="green">17</h2>
-
+        <h2 class="green" id="packingPackedItems">—</h2>
       </div>
 
       <div class="summary-card">
-
         <h3>Remaining</h3>
-
-        <h2>7</h2>
-
+        <h2 id="packingRemainingItems">—</h2>
       </div>
 
     </div>
 
     <!-- CHECKLIST -->
 
-    <div class="checklist-container">
-
-      <!-- CLOTHING -->
-
-      <div class="category-card">
-
-        <div class="category-header">
-
-          <h2>👕 Clothing</h2>
-
-          <div class="category-count">
-            8 Items
-          </div>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              T-Shirts
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              onchange="togglePacked(this)">
-
-            <span class="item-name">
-              Jackets
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              Shoes
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ADD -->
-
-        <div class="add-item-box">
-
-          <input 
-            type="text"
-            placeholder="Add new clothing item..."
-          >
-
-          <button class="small-btn">
-            Add
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- DOCUMENTS -->
-
-      <div class="category-card">
-
-        <div class="category-header">
-
-          <h2>📄 Documents</h2>
-
-          <div class="category-count">
-            5 Items
-          </div>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              Passport
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              Flight Tickets
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              onchange="togglePacked(this)">
-
-            <span class="item-name">
-              Travel Insurance
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ADD -->
-
-        <div class="add-item-box">
-
-          <input 
-            type="text"
-            placeholder="Add new document..."
-          >
-
-          <button class="small-btn">
-            Add
-          </button>
-
-        </div>
-
-      </div>
-
-      <!-- ELECTRONICS -->
-
-      <div class="category-card">
-
-        <div class="category-header">
-
-          <h2>💻 Electronics</h2>
-
-          <div class="category-count">
-            6 Items
-          </div>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              Mobile Charger
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              onchange="togglePacked(this)">
-
-            <span class="item-name">
-              Power Bank
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ITEM -->
-
-        <div class="check-item">
-
-          <div class="item-left">
-
-            <input type="checkbox"
-              checked
-              onchange="togglePacked(this)">
-
-            <span class="item-name packed">
-              Camera
-            </span>
-
-          </div>
-
-          <button class="delete-btn">
-            Delete
-          </button>
-
-        </div>
-
-        <!-- ADD -->
-
-        <div class="add-item-box">
-
-          <input 
-            type="text"
-            placeholder="Add new gadget..."
-          >
-
-          <button class="small-btn">
-            Add
-          </button>
-
-        </div>
-
-      </div>
-
+    <div class="checklist-container" id="packingCategoriesGrid">
+      <!-- dynamic categories -->
     </div>
 
     <!-- PROGRESS -->
@@ -710,16 +405,10 @@ Connected with Budget Planner
       <h2>Packing Progress 📦</h2>
 
       <div class="progress-bar">
-
-        <div class="progress-fill"></div>
-
+        <div class="progress-fill" id="packingProgressFill"></div>
       </div>
 
-      <div class="progress-text">
-
-        70% completed • 17 out of 24 items packed
-
-      </div>
+      <div class="progress-text" id="packingProgressText">Loading…</div>
 
     </div>
 
@@ -730,91 +419,247 @@ Connected with Budget Planner
   <script src="backend/traveloop.js"></script>
   <script>
 
-    const packingItems = {
-      clothing: [],
-      documents: [],
-      electronics: [],
-      toiletries: [],
-      other: []
-    };
+    const PackingAPI = (() => {
+      const API_BASE = 'backend';
 
-    function togglePacked(checkbox){
-      const itemText = checkbox.nextElementSibling;
-      if(checkbox.checked){
-        itemText.classList.add("packed");
-      }else{
-        itemText.classList.remove("packed");
+      async function request(endpoint, params = {}, method = 'POST') {
+        const url = `${API_BASE}/${endpoint}`;
+        const options = {
+          method,
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        };
+
+        if (method === 'GET') {
+          const qs = new URLSearchParams(params);
+          const fullUrl = qs.toString() ? `${url}?${qs.toString()}` : url;
+          const response = await fetch(fullUrl, { method: 'GET', credentials: 'include' });
+          const data = await response.json();
+          if (!response.ok || data.success === false) {
+            throw new Error(data.message || 'Backend request failed');
+          }
+          return data;
+        }
+
+        options.body = JSON.stringify(params);
+        const response = await fetch(url, options);
+        const data = await response.json();
+        if (!response.ok || data.success === false) {
+          throw new Error(data.message || 'Backend request failed');
+        }
+        return data;
       }
-      savePacking();
+
+      return {
+        list: (trip_id) => request('packing.php?action=list', { trip_id }, 'GET'),
+        upsert: (payload) => request('packing.php?action=upsert', payload, 'POST'),
+        toggle: (payload) => request('packing.php?action=toggle', payload, 'POST'),
+        delete: (payload) => request('packing.php?action=delete', payload, 'POST'),
+        reset: (trip_id) => request('packing.php?action=reset', { trip_id }, 'POST'),
+      };
+    })();
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','<')
+        .replaceAll('>','>')
+        .replaceAll('"','"')
+        .replaceAll("'",'&#039;');
     }
 
-    function addPackingItem(category){
-      const container = document.querySelector(`[data-category="${category}"]`);
-      const input = container.querySelector('input[type="text"]');
-      const itemText = input.value.trim();
+    const CATEGORY_META = [
+      { key: 'clothing', title: '👕 Clothing' },
+      { key: 'documents', title: '📄 Documents' },
+      { key: 'electronics', title: '💻 Electronics' },
+      { key: 'toiletries', title: '🧴 Toiletries' },
+      { key: 'other', title: '🧳 Other' },
+    ];
 
-      if (!itemText) {
+    let CURRENT_TRIP_ID = null;
+
+    function getTripIdFromQuery() {
+      const sp = new URLSearchParams(window.location.search);
+      const tripId = sp.get('trip_id');
+      return tripId ? parseInt(tripId, 10) : null;
+    }
+
+    function computeProgress(categories) {
+      const all = Object.values(categories || {}).flat();
+      const total = all.length;
+      const packed = all.filter(i => Number(i.packed) === 1).length;
+      const remaining = Math.max(0, total - packed);
+      const pct = total ? Math.round((packed / total) * 100) : 0;
+      return { total, packed, remaining, pct };
+    }
+
+    function renderCategories(categories) {
+      const grid = document.getElementById('packingCategoriesGrid');
+      grid.innerHTML = '';
+
+      const { total, packed, remaining, pct } = computeProgress(categories);
+      document.getElementById('packingTotalItems').textContent = total;
+      document.getElementById('packingPackedItems').textContent = packed;
+      document.getElementById('packingRemainingItems').textContent = remaining;
+      document.getElementById('packingProgressFill').style.width = `${pct}%`;
+      document.getElementById('packingProgressText').textContent =
+        total
+          ? `${pct}% completed • ${packed} out of ${total} items packed`
+          : 'No items yet. Add your packing list!';
+
+      CATEGORY_META.forEach(meta => {
+        const items = (categories && categories[meta.key]) ? categories[meta.key] : [];
+
+        const card = document.createElement('div');
+        card.className = 'category-card';
+        card.setAttribute('data-category', meta.key);
+
+        card.innerHTML = `
+          <div class="category-header">
+            <h2>${escapeHtml(meta.title)}</h2>
+            <div class="category-count">${items.length} Items</div>
+          </div>
+
+          <div class="category-items"></div>
+
+          <div class="add-item-box">
+            <input type="text" placeholder="Add new item..." />
+            <button class="small-btn" type="button">Add</button>
+          </div>
+        `;
+
+        const list = card.querySelector('.category-items');
+        if (!items.length) {
+          list.innerHTML = `<div style="color:#6b7280; padding:8px 2px;">No items</div>`;
+        } else {
+          list.innerHTML = items.map(it => {
+            const checked = Number(it.packed) === 1;
+            const packedCls = checked ? 'packed' : '';
+            return `
+              <div class="check-item">
+                <div class="item-left">
+                  <input type="checkbox" ${checked ? 'checked' : ''} onchange="togglePacked(this)" data-item-id="${it.id}" />
+                  <span class="item-name ${packedCls}">${escapeHtml(it.item_text)}</span>
+                </div>
+                <button class="delete-btn" type="button" onclick="deletePackingItem(${it.id})">Delete</button>
+              </div>
+            `;
+          }).join('');
+        }
+
+        const addBox = card.querySelector('.add-item-box');
+        const input = addBox.querySelector('input[type="text"]');
+        const btn = addBox.querySelector('button.small-btn');
+        btn.addEventListener('click', () => addPackingItem(meta.key));
+
+        grid.appendChild(card);
+      });
+    }
+
+    async function loadLatestTripPacking() {
+      // Requirement B: auto-pick latest trip (no trip_id query)
+      // Simple approach: get trips list and use first item.
+      try {
+        const queryTripId = getTripIdFromQuery();
+        if (queryTripId) {
+          CURRENT_TRIP_ID = queryTripId;
+        } else {
+          const tripsRes = await TravelLoopAPI.trips.list();
+          const trips = tripsRes.trips || [];
+          if (!trips.length) {
+            document.getElementById('packingProgressText').textContent = 'No trips found. Create a trip first.';
+            return;
+          }
+          CURRENT_TRIP_ID = trips[0].id;
+        }
+
+        const res = await PackingAPI.list(CURRENT_TRIP_ID);
+        if (!res.success) throw new Error(res.message || 'Failed to load packing');
+        renderCategories(res.categories);
+      } catch (e) {
+        console.error(e);
+        showNotification(e.message || 'Failed to load packing', false);
+      }
+    }
+
+    async function addPackingItem(category) {
+      const gridCard = Array.from(document.querySelectorAll('.category-card'))
+        .find(c => c.getAttribute('data-category') === category);
+      if (!gridCard) return;
+
+      const input = gridCard.querySelector('.add-item-box input[type="text"]');
+      const value = (input.value || '').trim();
+      if (!value) {
         showNotification('Enter an item name', false);
         return;
       }
 
-      const checkItem = document.createElement('div');
-      checkItem.className = 'check-item';
-      checkItem.innerHTML = `
-        <div class="item-left">
-          <input type="checkbox" onchange="togglePacked(this)">
-          <span class="item-name">${itemText}</span>
-        </div>
-        <button class="delete-btn" onclick="deletePackingItem(this, '${category}')">Delete</button>`;
-      
-      container.insertBefore(checkItem, input.parentElement);
-      input.value = '';
-      packingItems[category].push(itemText);
-      updateCategoryCount(category);
-      savePacking();
-    }
-
-    function deletePackingItem(btn, category){
-      const itemText = btn.parentElement.querySelector('.item-name').textContent;
-      packingItems[category] = packingItems[category].filter(item => item !== itemText);
-      btn.parentElement.remove();
-      updateCategoryCount(category);
-      savePacking();
-    }
-
-    function updateCategoryCount(category){
-      const container = document.querySelector(`[data-category="${category}"]`);
-      const count = container.querySelectorAll('.check-item').length;
-      container.querySelector('.category-count').textContent = `${count} Items`;
-    }
-
-    function savePacking(){
-      localStorage.setItem('packingItems', JSON.stringify(packingItems));
-    }
-
-    function loadPacking(){
-      const saved = localStorage.getItem('packingItems');
-      if (saved) {
-        Object.assign(packingItems, JSON.parse(saved));
+      try {
+        await PackingAPI.upsert({
+          trip_id: CURRENT_TRIP_ID,
+          category,
+          item: value,
+          packed: 0,
+        });
+        input.value = '';
+        await reload();
+      } catch (e) {
+        showNotification(e.message || 'Failed to add packing item', false);
       }
     }
 
-    function resetChecklist(){
-      if (confirm('Reset all packing items? This cannot be undone.')) {
-        packingItems.clothing = [];
-        packingItems.documents = [];
-        packingItems.electronics = [];
-        packingItems.toiletries = [];
-        packingItems.other = [];
-        localStorage.removeItem('packingItems');
-        showNotification('Checklist reset successfully!');
-        location.reload();
+    async function togglePacked(checkbox) {
+      const itemId = checkbox.getAttribute('data-item-id');
+      const checked = checkbox.checked;
+
+      // Optimistic UI
+      const itemTextEl = checkbox.parentElement.querySelector('.item-name');
+      if (checked) itemTextEl.classList.add('packed');
+      else itemTextEl.classList.remove('packed');
+
+      try {
+        await PackingAPI.toggle({ trip_id: CURRENT_TRIP_ID, item_id: Number(itemId) });
+        await reload();
+      } catch (e) {
+        showNotification(e.message || 'Failed to update packing item', false);
+        await reload();
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadPacking);
+    async function deletePackingItem(itemId) {
+      if (!confirm('Delete this packing item?')) return;
+      try {
+        await PackingAPI.delete({ trip_id: CURRENT_TRIP_ID, item_id: itemId });
+        await reload();
+      } catch (e) {
+        showNotification(e.message || 'Failed to delete packing item', false);
+      }
+    }
+
+    async function resetChecklist() {
+      if (!CURRENT_TRIP_ID) {
+        showNotification('No trip selected', false);
+        return;
+      }
+      if (!confirm('Reset all packing items for this trip?')) return;
+      try {
+        await PackingAPI.reset(CURRENT_TRIP_ID);
+        await reload();
+        showNotification('Checklist reset successfully');
+      } catch (e) {
+        showNotification(e.message || 'Failed to reset checklist', false);
+      }
+    }
+
+    async function reload() {
+      const res = await PackingAPI.list(CURRENT_TRIP_ID);
+      renderCategories(res.categories);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadLatestTripPacking);
 
   </script>
 
 </body>
 </html>
+

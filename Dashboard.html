@@ -334,21 +334,20 @@ Traveloop Project
 
       <div class="welcome">
 
-        <h1>Welcome Back, Traveler 👋</h1>
+        <h1 id="welcomeTitle">Welcome Back, Traveler 👋</h1>
 
-        <p>
-          Plan your next adventure with Traveloop
-        </p>
+        <p id="welcomeSubtitle">Plan your next adventure with Traveloop</p>
 
       </div>
 
       <div class="profile">
 
-        <button class="trip-btn">
+        <button class="trip-btn" onclick="location.href='Create-Trip.html'">
           + Plan New Trip
         </button>
 
         <img 
+          id="profileImg"
           src="https://i.pravatar.cc/150?img=12"
           alt="Profile"
         >
@@ -367,7 +366,7 @@ Traveloop Project
 
         <p>Trips created so far</p>
 
-        <div class="number">12</div>
+        <div class="number" id="statTotalTrips">—</div>
 
       </div>
 
@@ -377,7 +376,7 @@ Traveloop Project
 
         <p>Explore the world</p>
 
-        <div class="number">8</div>
+        <div class="number" id="statCountriesVisited">—</div>
 
       </div>
 
@@ -387,7 +386,7 @@ Traveloop Project
 
         <p>Overall travel expenses</p>
 
-        <div class="number">$7.5K</div>
+        <div class="number" id="statTotalBudget">—</div>
 
       </div>
 
@@ -397,7 +396,7 @@ Traveloop Project
 
         <p>Scheduled adventures</p>
 
-        <div class="number">3</div>
+        <div class="number" id="statUpcomingTrips">—</div>
 
       </div>
 
@@ -405,13 +404,15 @@ Traveloop Project
 
     <!-- RECENT TRIPS -->
 
+
     <h2 class="section-title">
       Recent Trips
     </h2>
 
-    <div class="trip-grid">
+    <div class="trip-grid" id="recentTripsGrid">
 
-      <!-- CARD 1 -->
+      <!-- CARD 1 (dynamic) -->
+
 
       <div class="trip-card">
 
@@ -518,7 +519,8 @@ Traveloop Project
       Recommended Destinations
     </h2>
 
-    <div class="destination-grid">
+    <div class="destination-grid" id="recommendedDestinationsGrid">
+
 
       <div class="destination-card">
 
@@ -572,5 +574,130 @@ Traveloop Project
 
   </div>
 
+  <script src="backend/traveloop.js"></script>
+  <script>
+    function formatMoney(n) {
+      const num = Number(n || 0);
+      if (!isFinite(num)) return '$0';
+      if (num >= 1000) return '$' + (num / 1000).toFixed(num % 1000 === 0 ? 0 : 1) + 'K';
+      return '$' + num.toFixed(0);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '<')
+        .replaceAll('>', '>')
+        .replaceAll('"', '"')
+        .replaceAll("'", '&#039;');
+    }
+
+    async function loadDashboard() {
+      const recentGrid = document.getElementById('recentTripsGrid');
+      const recommendedGrid = document.getElementById('recommendedDestinationsGrid');
+
+      try {
+        // If auth fails, redirect to login
+        const auth = await TravelLoopAPI.auth.status();
+        if (!auth.authenticated) {
+          window.location.href = 'index.html';
+          return;
+        }
+
+        // Profile (for greeting)
+        try {
+          const profile = await TravelLoopAPI.profile.load();
+          if (profile && profile.success !== false) {
+            const fullName = profile.user?.full_name || profile.user?.name || profile.full_name;
+            if (fullName) {
+              document.getElementById('welcomeTitle').textContent = `Welcome Back, ${fullName} 👋`;
+            }
+            // If backend returns avatar url in the future, wire it here.
+            if (profile.user?.avatar_url) {
+              document.getElementById('profileImg').src = profile.user.avatar_url;
+            }
+          }
+        } catch (e) {
+          // Non-fatal
+        }
+
+        // Stats + popular locations
+        const admin = await TravelLoopAPI.admin.stats();
+        const stats = admin.stats || {};
+
+        document.getElementById('statTotalTrips').textContent = stats.trips ?? '0';
+        document.getElementById('statTotalBudget').textContent = formatMoney(stats.total_budget);
+        // No "countries visited" field from admin.php; approximate if possible.
+        document.getElementById('statCountriesVisited').textContent = stats.countries_visited ?? (stats.trips ? '—' : '0');
+        document.getElementById('statUpcomingTrips').textContent = stats.upcoming_trips ?? '—';
+
+        // Recent trips (per-user)
+        const tripsRes = await TravelLoopAPI.trips.list();
+        const trips = tripsRes.trips || [];
+
+        recentGrid.innerHTML = '';
+        if (trips.length === 0) {
+          recentGrid.innerHTML = '<div style="grid-column:1/-1;background:white;border-radius:20px;padding:30px;text-align:center;color:#6b7280;">No trips yet. Create your first trip!</div>';
+        } else {
+          trips.slice(0, 6).forEach(trip => {
+            const status = trip.status || 'Upcoming';
+            const cover = trip.cover_photo || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e';
+            const destination = trip.destination ? escapeHtml(trip.destination) : 'Destination';
+            const name = escapeHtml(trip.name || destination);
+            const budget = trip.budget != null ? '$' + Number(trip.budget).toFixed(0) : '$0';
+
+            recentGrid.innerHTML += `
+              <div class="trip-card">
+                <img src="${cover}" alt="" />
+                <div class="trip-content">
+                  <h3>${name}</h3>
+                  <p>${escapeHtml(destination)} • ${escapeHtml(trip.start_date || '')}${trip.end_date ? ' - ' + escapeHtml(trip.end_date) : ''}</p>
+                  <div class="trip-details">
+                    <span class="budget">Budget: ${budget}</span>
+                    <button class="view-btn" onclick="location.href='Itinerary-View.html?trip_id=${trip.id}'">View</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+        }
+
+        // Recommended destinations from admin.php popular_locations
+        const popular = stats.popular_locations || [];
+        recommendedGrid.innerHTML = '';
+        if (popular.length === 0) {
+          recommendedGrid.innerHTML = `
+            <div class="destination-card">
+              <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" />
+              <div class="overlay"><h3>Get recommendations</h3></div>
+            </div>
+          `;
+        } else {
+          const defaultImgs = [
+            'https://images.unsplash.com/photo-1506744038136-46273834b3fb',
+            'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267',
+            'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee',
+            'https://images.unsplash.com/photo-1488646953014-85cb44e25828'
+          ];
+
+          popular.slice(0, 4).forEach((p, idx) => {
+            const loc = p.location || p.name || 'Destination';
+            const img = defaultImgs[idx % defaultImgs.length];
+            recommendedGrid.innerHTML += `
+              <div class="destination-card" onclick="location.href='Search.html'" title="Search ${escapeHtml(loc)}">
+                <img src="${img}" />
+                <div class="overlay"><h3>${escapeHtml(loc)}</h3></div>
+              </div>
+            `;
+          });
+        }
+      } catch (err) {
+        console.error(err);
+        alert(err.message || 'Failed to load dashboard');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadDashboard);
+  </script>
 </body>
 </html>
